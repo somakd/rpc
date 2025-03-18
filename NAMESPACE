@@ -1,0 +1,9 @@
+useDynLib(rpc, .registration=TRUE)
+importFrom(Rcpp, evalCpp)
+
+importFrom("stats", "sd")
+importFrom("Matrix","colMeans","crossprod")
+    
+export(rpc)
+export(eBIC)
+export(XXt.compute)
