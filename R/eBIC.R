@@ -13,10 +13,8 @@
 #' @author Somak Dutta
 #' @author Maintainer: Somak Dutta <somakd@iastate.edu>
 #' 
-#' @references Wang, Nguyen, Dutta, and Roy, 2024.
 #' 
 #' @examples
-#' \donttest{
 #' n <- 50; p <- 400;
 #' trueidx <- 1:3
 #' truebeta <- c(4,5,6)
@@ -24,7 +22,7 @@
 #' y <- 0.5 + X[,trueidx] %*% truebeta + rnorm(n)
 #' res <- rpc(X,y, lambda = 0.1, ncores = 1)
 #' eBIC(res) # model.best: model selected by eBIC
-#' }
+#' 
 #' 
 #' @export
 eBIC <- function(rpc.obj) {

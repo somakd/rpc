@@ -4,7 +4,7 @@
 #'For an input matrix X, This function computes UU' = tcrossprod(U)
 #'where U = scale(X) in a memory efficient way.
 #'
-#'@param X The input matrix of type NumericMatrix or dgCMatrix. No
+#'@param X The input matrix of type `matrix' or `dgCMatrix'. No
 #'need to center or scale X as that would be done implicitly.
 #'@param meanX Vector of column means of X. Will be computed if not provided.
 #'@param varX Vector of column variances of X. Will be computed if not provided.
@@ -16,12 +16,11 @@
 #'@author Somak Dutta
 #'@author Maintainer: Somak Dutta <somakd@iastate.edu>
 #'@examples
-#' \donttest{
-#' library(Matrix)
+#' require("Matrix")
 #' set.seed(123)
 #' x <- rsparsematrix(100,100,density = 0.3)
 #' norm(XXt.compute(x) - tcrossprod(scale(x))) # (4.783951e-13 on my machine)
-#' }
+#'
 #' @export
 XXt.compute <- function(X, meanX = NULL, varX = NULL,ncores = 4, check = TRUE, chunksize = 1000) {
   

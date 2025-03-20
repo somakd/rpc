@@ -1,8 +1,8 @@
 Package: rpc
 Type: Package
 Title: Ridge Partial Correlation
-Version: 2.0
-Date: 2025-03-18
+Version: 2.0.3
+Date: 2025-03-20
 Authors@R: c(
   person(given="Somak", family="Dutta", role=c("aut", "cre", "cph"),
          email="somakd@iastate.edu"),
@@ -12,11 +12,13 @@ Authors@R: c(
   )
 Encoding: UTF-8
 Maintainer: Somak Dutta <somakd@iastate.edu>
-Description: Compute ridge partial correlation coefficients for each column in a matrix
- and perform model selection based on the extended Bayesian Information Criteria. Users
- provide the matrix of covariates, either in the default matrix format of R or as a sparse
- matrix of type dgCMatrix, and a vector of response variable. Detail of the method is given
- in the manual.
+Description: Computes the ridge partial correlation
+    coefficients in a high or ultra-high dimensional linear regression
+    problem. An extended Bayesian information criterion is also
+    implemented for variable selection. Users provide the matrix
+    of covariates as a usual dense matrix or a sparse matrix
+    stored in a compressed sparse column format. Detail of the method
+    is given in the manual.
 License: GPL (>= 2)
 Imports: Rcpp (>= 1.0.11), Matrix
 Suggests: MatrixExtra

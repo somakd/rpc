@@ -7,7 +7,7 @@
 rpc(X, y, lambda = 1, XXt = NULL, ncores = 1, RAM = 6)
 }
 \arguments{
-\item{X}{The input matrix of type NumericMatrix or dgCMatrix. No
+\item{X}{The input matrix of type `matrix' or `dgCMatrix'. No
 need to center or scale X as that would be done implicitly.}
 
 \item{y}{vector containing the response variable.}
@@ -17,7 +17,7 @@ need to center or scale X as that would be done implicitly.}
 \item{XXt}{the matrix UU' where U = scale(X), will be computed
 if not provided. When the matrix X is large, recomputing XXt can be costly,
 for example if the rpc's for a new lambda value is required. It is thus
-wise to pass XXt (see function \code{XXt}).}
+wise to pass XXt (see function \code{XXt.compute}).}
 
 \item{ncores}{the number of cores to be used. Default is 1.}
 
@@ -30,7 +30,7 @@ an object containing the following items: \cr
          - rpc: vector of rpc coefficients. \cr
          - X: the original matrix of covariates. \cr
          - XXt: the matrix UU', where U is the centered-scaled X. \cr
-         - y: vector of centered and scaled response variable.
+         - y: vector of centered and scaled response variable.\cr
          - lambda: the original lambda used.
 }
 \description{
@@ -46,48 +46,46 @@ This function computes the ridge partial correlations for each variable in the c
 }
 \details{
 Consider the linear regression model:
-\deqn{y = \beta_0 + \mathbf{X}\beta + \epsilon,}
-where \eqn{\mathbf{X}} is the \eqn{n \times p} design matrix, \eqn{\beta} is a p-dimensional vector, 
-and \eqn{\epsilon} is the n-dimensional vector of iid residual errors with mean 0 and variance \eqn{\sigma^2}, \eqn{\epsilon} is independent of \eqn{\mathbf{X}.}
+\deqn{y = \beta_0 + X\beta + \epsilon,}
+where \eqn{X} is the \eqn{n \times p} design matrix, \eqn{\beta} is a p-dimensional vector, 
+and \eqn{\epsilon} is the n-dimensional vector of iid residual errors with mean 0 and variance \eqn{\sigma^2}, \eqn{\epsilon} is independent of \eqn{X}.
 
-Assuming the design matrix \eqn{\mathbf{X}} is centered and scaled, and let \eqn{\tilde{Y} = Y - \bar{Y}_n},
-the population partial correlation between the \eqn{i^{th}} predictor and \eqn{Y} given the remaining predictors is
-\eqn{-P_{[i, 1]} / \sqrt{P_{[1, 1]}P_{[i, i]}}}, where \eqn{P} is the \eqn{(p+1) \times (p+1)} joint precision matrix of the response and the covariates.
+Assuming the design matrix \eqn{X} is centered and scaled, and letting \eqn{\tilde{Y} = Y - \bar{Y}_n},
+the (sample) partial correlation between the \eqn{i^{th}} predictor and \eqn{Y} given the remaining predictors is 
+\eqn{-P_{i+1, 1} / \sqrt{P_{1, 1}P_{i+1, i+1}}}, where \eqn{P} is the \eqn{(p+1) \times (p+1)} joint precision matrix of the response and the covariates.
 In cases when \eqn{p > n}, \eqn{P} is not invertible. 
 Hence, we consider the ridge regularized version of \eqn{P}, 
 given by \eqn{R}, where:
 \deqn{R := (n-1)\begin{bmatrix}\tilde{Y}^T\tilde{Y} & \tilde{Y}^TX\\ X^T\tilde{Y} & X^TX + \lambda I_p \end{bmatrix}^{-1}.}
 
-The ridge partial correlations between \eqn{y} and \eqn{X_{i}} is then defined in terms of elements of \eqn{\mathbf{R}} as follows:
+The ridge partial correlations between \eqn{y} and \eqn{X_{i}} is then defined in terms of elements of \eqn{R} as follows:
 \deqn{\rho_{i, \lambda} = - \dfrac{r_{i+1,1}}{\sqrt{r_{1,1} r_{i+1,i+1}}}}
 
 where \eqn{r_{i,j}} is the \eqn{(i.j)}th entry in \eqn{R}.
 
 For variable screening, one may choose the \eqn{K} variables with largest absolute RPC values,
 for some \eqn{K > 0} (e.g., \eqn{K = n} or \eqn{n/\log p}). Alternatively, the extended BIC
-criteria may be used. See \code{min.BIC} function in this package.
+criteria may be used. See \code{eBIC} function in this package.
 
 \bold{N.B.} Further hyper-threading speed-up can be obtained by
 loading the \code{MatrixExtra} package.
 }
 \examples{
-\donttest{
+## Toy example:
 n <- 50; p <- 400;
-trueidx <- 1:3
+trueidx <- 1:3 ## First three variables are important
 truebeta <- c(4,5,6)
-X <- matrix(rnorm(n*p), n, p) # n x p covariate matrix
-y <- 0.5 + X[,trueidx] \%*\% truebeta + rnorm(n)
+X <- matrix(rnorm(n*p), n, p) ## n x p covariate matrix
+y <- 0.5 + X[,trueidx] \%*\% truebeta + rnorm(n) ## Response
 res <- rpc(X,y, lambda = 0.1, ncores = 1)
 order(abs(res$rpc),decreasing = TRUE)[1:10] # Top 10 variables
-res2 <- rpc(X,y, lambda = 0.1,XXt = res$XXt , ncores = 1)
+## Run another case with the same X and y, but pass XXt to make it faster
+res2 <- rpc(X,y, lambda = 0.001,XXt = res$XXt , ncores = 1)
 order(abs(res2$rpc),decreasing = TRUE)[1:10] # Top 10 variables
-}
-}
-\references{
-Wang, Ngyuen, Dutta, and Roy 2025.
+
 }
 \seealso{
-[BIC()] for selecting minimum BIC model, [XXt.compute()] for computing crossproduct.
+[eBIC()] for model selecting, [XXt.compute()] for computing crossproduct.
 }
 \author{
 Somak Dutta

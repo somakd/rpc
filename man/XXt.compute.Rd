@@ -14,7 +14,7 @@ XXt.compute(
 )
 }
 \arguments{
-\item{X}{The input matrix of type NumericMatrix or dgCMatrix. No
+\item{X}{The input matrix of type `matrix' or `dgCMatrix'. No
 need to center or scale X as that would be done implicitly.}
 
 \item{meanX}{Vector of column means of X. Will be computed if not provided.}
@@ -36,12 +36,11 @@ For an input matrix X, This function computes UU' = tcrossprod(U)
 where U = scale(X) in a memory efficient way.
 }
 \examples{
-\donttest{
-library(Matrix)
+require("Matrix")
 set.seed(123)
 x <- rsparsematrix(100,100,density = 0.3)
 norm(XXt.compute(x) - tcrossprod(scale(x))) # (4.783951e-13 on my machine)
-}
+
 }
 \author{
 Somak Dutta
